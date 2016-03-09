@@ -80,14 +80,16 @@ params.fraction = 1;
 params.rf = .5;
 
 delete(gcp('nocreate'))
-parpool(5);
+parpool(25);
 
 for d = 1:length(datas)
   disp(['Running ', datas{d}]);
-  fname = ['results/',strrep(datas{d},'.csv',''),'_n', num2str(params.n_classifiers),'_b', ...
+  fname = ['results/all_',strrep(datas{d},'.csv',''),'_n', num2str(params.n_classifiers),'_b', ...
     num2str(params.bootstraps),'_rf', num2str(100*params.rf), '_f', ...
     num2str(100*params.fraction), '.mat'];
-  load(datas{d});
+  D = load(['../../ClassificationDatasets/csv/', datas{d}]);
+  data = D(:, 1:end-1);
+  labels = D(:, end)+1;
   try
    basic_experiment(data, labels, params, fname)
   catch 
